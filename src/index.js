@@ -6,6 +6,7 @@ canvas.height = canvas.clientHeight;
 let context = canvas.getContext("2d");
 let totalPoints = 0;
 let insidePoints = 0;
+let batchSize = 5;
 
 requestAnimationFrame(generatePoint);
 
@@ -16,19 +17,22 @@ function distanceFromOrigin(x, y) {
 }
 
 function generatePoint() {
-  totalPoints++;
-  let xPos = Math.floor(Math.random() * canvas.width);
-  let yPos = Math.floor(Math.random() * canvas.height);
-  context.beginPath();
-  context.fillStyle = "#FF0000";
-  if (distanceFromOrigin(xPos, yPos) < canvas.width) {
-    insidePoints++;
-    context.fillStyle = "#0000FF";
-  }
-  context.arc(xPos, yPos, 1, 0, Math.PI * 2);
-  context.fill();
-  if (totalPoints % 1000 == 0) {
-    console.log("Pi approximation: " + (insidePoints / totalPoints) * 4);
+  for (let i = 0; i < batchSize; i++) {
+    totalPoints++;
+    let xPos = Math.floor(Math.random() * canvas.width);
+    let yPos = Math.floor(Math.random() * canvas.height);
+    context.beginPath();
+    context.fillStyle = "#FF0000";
+    if (distanceFromOrigin(xPos, yPos) < canvas.width) {
+      insidePoints++;
+      context.fillStyle = "#0000FF";
+    }
+    context.arc(xPos, yPos, 1, 0, Math.PI * 2);
+    context.fill();
+    if (totalPoints % 1000 === 0) {
+      console.log("total points: " + totalPoints);
+      console.log("Pi approximation: " + (insidePoints / totalPoints) * 4);
+    }
   }
 
   requestAnimationFrame(generatePoint);
